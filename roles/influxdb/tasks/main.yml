@@ -1,0 +1,33 @@
+- name: download influxdb package
+  shell: curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+  when: ansible_distribution == "Ubuntu"
+
+- name: ubuntu update again
+  apt: 
+    upgrade: dist
+    update_cache: yes
+  changed_when: false
+  when: ansible_distribution == "Ubuntu"
+
+- name: install influxdb in ubuntu
+  apt:
+    name: influxdb
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: download the influxdb in centos
+  get_url:
+    url: https://repos.influxdata.com/rhel/8/x86_64/stable/influxdb-1.8.5.x86_64.rpm
+    dest: /tmp/influxdb-1.8.5.x86_64.rpm
+  when: ansible_distribution == "CentOS"
+
+- name: install influxdb in centos
+  yum:
+    name: /tmp/influxdb-1.8.5.x86_64.rpm
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: start Influxdb
+  service: 
+    name: influxdb
+    state: restarted

@@ -1,0 +1,38 @@
+- name: install httpd in ubuntu
+  apt:
+    name: apache2
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: install httpd in centos
+  dnf:
+    name: httpd
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: start httpd in centos
+  service: 
+    name: httpd 
+    state: restarted
+  when: ansible_distribution == "CentOS"
+
+- name: start httpd in ubuntu
+  service: 
+    name: apache2
+    state: restarted
+  when: ansible_distribution == "Ubuntu"
+###############################################
+- name: install php
+  package: 
+    name: php
+    state: latest
+############################################
+- name: install mariadb in centos and ubuntu
+  package: 
+     name: mariadb-server
+
+- name: start mariadb
+  service:
+    name: mariadb
+    state: restarted
+    enabled: true
